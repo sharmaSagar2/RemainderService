@@ -17,7 +17,6 @@ const sendBasicEmail = async (mailFrom,mailTo,mailSubject,mailBody) => {
     }
     
 }
-
 const fetchPendingEmails = async (timestamp) => {
     try {
         const response = await repo.get({status:"PENDING"});
@@ -47,11 +46,28 @@ const updateTicket = async(ticketId,data) => {
         throw error;
     }
 }
+const subscribeEvents = async (payload) => {
+    let service = payload.service;
+    let data = payload.data;
+    console.log("DATA IS SAGAR",data);
+    switch(service) {
+        case 'CREATE_TICKET':
+            await createNotification(data);
+            break;
+        case 'SEND_BASIC_EMAIL':
+            await sendBasicEmail(data);
+            break;
+        default:
+            console.log('no valid event received');
+
+    }
+}
 
 
 module.exports = {
      sendBasicEmail,
      fetchPendingEmails,
      createNotification,
-     updateTicket
+     updateTicket,
+     subscribeEvents
 }
